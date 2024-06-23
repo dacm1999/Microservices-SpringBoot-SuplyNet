@@ -1,0 +1,73 @@
+server:
+  port: 8080
+#  servlet:
+#    context-path: /api-gateway
+spring:
+  application:
+    name: api-gateway-client
+
+  cloud:
+    gateway:
+      routes:
+        - id: authorization-service
+          uri: http://localhost:8000
+          predicates:
+            - Path=/oauth2/authorize, /oauth2/token, /userinfo, /.well-known/jwks.json
+          filters:
+            - TokenRelay=
+
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+#  main:
+#    allow-bean-definition-overriding: true
+  #    web-application-type: reactive
+
+  output.ansi.enabled: ALWAYS
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://127.0.0.1:8000"
+      client:
+        registration:
+          basic-client:
+            client-id: basic-client
+            client-secret: client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: 'http://127.0.0.1:8080/authorized'
+            scope: openid , ALL
+            client-name: BASIC CLIENT
+            provider: gateway-provider
+            client-authentication-method: basic
+#            redirect-uri: 'http://127.0.0.1:8080/authorization-service/authorized'
+#            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/basic-client"
+
+          jwk-client:
+            client-id: jwk-client
+            client-secret: client-secret
+            authorization-grant-type: authorization_code
+#            redirect-uri: 'http://127.0.0.1:8000/authorization-service/authorized'
+            redirect-uri: 'http://127.0.0.1:8080/login/oauth2/code/jwk-client'
+            scope: openid, ALL
+            client-name: JWK CLIENT
+            provider: gateway-provider
+            client-authentication-method: client_secret_basic
+
+
+        provider:
+          gateway-provider:
+            authorization-uri: 'http://127.0.0.1:8000/oauth2/authorize'
+            token-uri: 'http://127.0.0.1:8000/oauth2/token'
+            user-info-uri: 'http://127.0.0.1:8000/userinfo'
+            jwk-set-uri: 'http://127.0.0.1:8000/.well-known/jwks.json'
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+    instance:
+      prefer-ip-address: true
+    register-with-eureka: true
+    fetch-registry: true

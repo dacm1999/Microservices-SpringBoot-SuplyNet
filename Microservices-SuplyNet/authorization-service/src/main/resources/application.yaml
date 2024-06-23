@@ -1,0 +1,25 @@
+server:
+  port: 8000
+#  servlet:
+#    context-path: /authorization-service
+spring:
+  application:
+    name: authorization-service
+  datasource:
+    url: jdbc:mysql://localhost:3313/auth-service-db
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+    instance:
+      prefer-ip-address: true
+    register-with-eureka: true
+    fetch-registry: true
