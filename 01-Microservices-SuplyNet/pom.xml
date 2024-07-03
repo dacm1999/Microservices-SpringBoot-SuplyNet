@@ -22,7 +22,7 @@
         <module>authorization-service</module>
         <module>api-gateway</module>
         <module>eureka-service</module>
-        <module>resource-server</module>
+        <module>user-service</module>
     </modules>
     <dependencies>
         <dependency>

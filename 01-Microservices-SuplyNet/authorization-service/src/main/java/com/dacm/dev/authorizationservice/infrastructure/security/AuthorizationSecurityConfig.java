@@ -60,15 +60,6 @@ public class AuthorizationSecurityConfig {
     @Order(2)
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
 
-//        http.authorizeHttpRequests(requests -> {
-//            requests
-//                    .requestMatchers("/login").permitAll();
-//
-//            requests.anyRequest().authenticated();
-//        });
-//        http.formLogin(formLoginConfig -> formLoginConfig.loginPage("/login").permitAll());
-//
-//        return http.build();
         http.authorizeHttpRequests(authConfig -> {
             authConfig.requestMatchers("/login").permitAll();
             authConfig.requestMatchers("authorized").permitAll();
