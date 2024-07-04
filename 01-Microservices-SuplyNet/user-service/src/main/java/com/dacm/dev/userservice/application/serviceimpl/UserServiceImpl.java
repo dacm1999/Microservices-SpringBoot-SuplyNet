@@ -4,6 +4,7 @@ import com.dacm.dev.userservice.application.service.UserService;
 import com.dacm.dev.userservice.domain.Message;
 import com.dacm.dev.userservice.domain.dtos.response.ApiResponseDto;
 import com.dacm.dev.userservice.domain.dtos.response.UserDto;
+import com.dacm.dev.userservice.domain.exceptions.CustomException;
 import com.dacm.dev.userservice.domain.model.UserModel;
 import com.dacm.dev.userservice.infrastructure.adapters.input.mapper.UserMapper;
 import com.dacm.dev.userservice.infrastructure.adapters.output.persistence.entity.User;
@@ -34,8 +35,7 @@ public class UserServiceImpl implements UserService {
                 .hasElement()
                 .flatMap(exists -> {
                     if (exists) {
-//                        return Mono.error(new CustomException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST,Message.USERNAME_TAKEN, LocalDateTime.now()));
-                        return Mono.error(new Exception(Message.USERNAME_TAKEN));
+                        return Mono.error(new CustomException(HttpStatus.BAD_REQUEST.value(),Message.USERNAME_TAKEN, HttpStatus.BAD_REQUEST,LocalDateTime.now()));
                     } else {
                         User userEntity = User.builder()
                                 .username(userModel.getUsername())
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
                                     userDto
                             ));
                 })
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, Message.USER_NOT_FOUND)));
+                .switchIfEmpty(Mono.error(new CustomException(HttpStatus.BAD_REQUEST.value(), Message.USER_NOT_FOUND,HttpStatus.BAD_REQUEST,LocalDateTime.now())));
 //                .switchIfEmpty(Mono.error(new Exception(Message.USER_NOT_FOUND)));
     }
 
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
                                     userDto
                             )));
                 })
-                .switchIfEmpty(Mono.error(new Exception(Message.ERROR)));
+                .switchIfEmpty(Mono.error(new CustomException(HttpStatus.BAD_REQUEST.value(), Message.USER_NOT_FOUND,HttpStatus.BAD_REQUEST,LocalDateTime.now())));
     }
 
 

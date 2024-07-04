@@ -9,13 +9,20 @@ import com.dacm.dev.userservice.domain.model.UserModel;
 import com.dacm.dev.userservice.infrastructure.adapters.output.persistence.entity.User;
 import com.dacm.dev.userservice.infrastructure.config.ObjectValidator;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -32,11 +39,7 @@ public class UserHandler {
     private final UserService userService;
     private final ObjectValidator objectValidator;
 
-    @Operation(summary = "Retrieve all users from database")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = Message.SUCCESS),
-            @ApiResponse(responseCode = "200", description = Message.SUCCESS)
-    })
+
     public Mono<ServerResponse> getAll(ServerRequest request) {
         Flux<UserDto> userFlux = userService.getAllUsers();
         return ServerResponse.ok()
@@ -44,12 +47,8 @@ public class UserHandler {
                 .body(userFlux, User.class);
     }
 
-    @Operation(summary = "Find user by username")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = Message.USER_SAVE_SUCCESSFULLY),
-            @ApiResponse(responseCode = "400", description = Message.USER_NOT_FOUND)
-    })
-    @ResponseStatus(HttpStatus.OK)
+
+
     public Mono<ServerResponse> getUserByUsername(ServerRequest request) {
         String username = request.pathVariable("username");
         Mono<UserDto> user = userService.getUserByUsername(username);
@@ -59,12 +58,6 @@ public class UserHandler {
     }
 
 
-    @Operation(summary = "Find user by username")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = Message.USER_UPDATE_SUCCESSFULLY),
-            @ApiResponse(responseCode = "400", description = Message.USER_NOT_FOUND)
-    })
-    @ResponseStatus(HttpStatus.OK)
     public Mono<ServerResponse> update(ServerRequest request) {
         String username = request.pathVariable("username");
         Mono<UserModel> userModelMono = request.bodyToMono(UserModel.class)
@@ -72,12 +65,7 @@ public class UserHandler {
         return userModelMono.flatMap(userDto1 -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(userService.updateUser(username, userDto1), UserDto.class));
     }
 
-    @Operation(summary = "Find user by username")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = Message.USER_DELETE_SUCCESSFULLY),
-            @ApiResponse(responseCode = "400", description = Message.USER_NOT_FOUND)
-    })
-    @ResponseStatus(HttpStatus.OK)
+
     public Mono<ServerResponse> delete(ServerRequest request) {
         String username = request.pathVariable("username");
         return userService.deleteUser(username)

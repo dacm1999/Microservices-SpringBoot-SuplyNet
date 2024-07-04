@@ -1,5 +1,7 @@
 package com.dacm.dev.apigateway;
 
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -11,6 +13,12 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -18,16 +26,30 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebFluxSecurity
 public class SecurityApiGatewayConfig {
 
+//    @Bean
+//    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
+//        return builder
+//                .routes()
+//                .route(r -> r.path("/user-service/v3/api-docs").and().method(HttpMethod.GET).uri("lb://user-service"))
+//                .build();
+//    }
+
+
     @Bean
     @Order(1)
     public SecurityWebFilterChain basicClientFilterChain(ServerHttpSecurity http) {
         http.
                 authorizeExchange(authorizeExchange ->
                         authorizeExchange
+
+                                .pathMatchers(HttpMethod.GET,"/webjars/**").permitAll()
+                                .pathMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
+                                .pathMatchers(HttpMethod.GET,"/swagger-resources/**").permitAll()
+                                .pathMatchers(HttpMethod.GET,"/v3/api-docs/**").permitAll()
+                                .pathMatchers(HttpMethod.GET,"/user-service/v3/api-docs/**").permitAll()
+
                                 .pathMatchers("/login/**").permitAll()
                                 .pathMatchers(HttpMethod.GET, "/authorized").permitAll()
-                                .pathMatchers(HttpMethod.GET, "/list").hasAuthority("SCOPE_openid")
-                                .pathMatchers(HttpMethod.POST, "/create").hasAuthority("SCOPE_openid")
                                 .anyExchange().authenticated())
                 .oauth2Login(withDefaults())
                 .oauth2Client(withDefaults());
@@ -41,8 +63,8 @@ public class SecurityApiGatewayConfig {
     public SecurityWebFilterChain pkceFilterChain(ServerHttpSecurity http, ServerOAuth2AuthorizationRequestResolver resolver) {
         http.authorizeExchange(authorizeExchangeSpec ->
                         authorizeExchangeSpec
-                                .pathMatchers("login").permitAll()
-                                .pathMatchers("logout").authenticated()
+                                .pathMatchers("/login").permitAll()
+                                .pathMatchers("/logout").authenticated()
                                 .anyExchange().authenticated())
                 .oauth2Login(oAuth2LoginSpec -> oAuth2LoginSpec.authorizationRequestResolver(resolver))
                 .oauth2Client(withDefaults());

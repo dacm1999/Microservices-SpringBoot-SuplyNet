@@ -1,4 +1,4 @@
-package com.dacm.dev.userservice.infrastructure.config;//package com.dacm.dev.userservice.infrastructure.config;
+package com.dacm.dev.userservice.infrastructure.config;
 
 
 import jakarta.validation.ConstraintViolation;
