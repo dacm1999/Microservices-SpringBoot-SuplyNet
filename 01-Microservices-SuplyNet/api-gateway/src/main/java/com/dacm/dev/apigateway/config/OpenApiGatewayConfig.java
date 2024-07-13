@@ -1,4 +1,4 @@
-package com.dacm.dev.apigateway;
+package com.dacm.dev.apigateway.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "ApiGateway Service", version = "1.0.0", description = "Documentation API Gateway v1.0"))

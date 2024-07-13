@@ -15,8 +15,9 @@ spring:
         - id: authorization-service
           uri: http://localhost:8000
           predicates:
-            - Path=/oauth2/authorize, /oauth2/token, /userinfo, /.well-known/jwks.json
+            - Path=/oauth2/authorize, /oauth2/token, /userinfo, /.well-known/jwks.json , /authorization-service/v3/api-docs
           filters:
+            - StripPrefix=1
             - TokenRelay=
 
 
@@ -93,6 +94,10 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 
 springdoc:
   enable-native-support: true
@@ -109,3 +114,6 @@ springdoc:
       - url: http://localhost:8001/user-service/v3/api-docs
         name: User service
         primaryName: User service
+      - url: http://localhost:8000/authorization-service/v3/api-docs
+        name: Authorization service
+        primaryName: Authorization service

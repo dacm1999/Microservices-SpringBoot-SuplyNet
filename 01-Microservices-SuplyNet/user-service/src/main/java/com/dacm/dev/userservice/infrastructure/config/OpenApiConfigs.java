@@ -8,12 +8,8 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.servers.Server;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 @OpenAPIDefinition
 @Configuration
@@ -26,7 +22,9 @@ public class OpenApiConfigs {
                         .title("User Service Api")
                         .version("1.0.0")
                         .description("API for user service application")
-                        .contact(new Contact().name("Daniel Contreras").email("dacm.dev@icloud.com").url("https://dacm-dev.netlify.app/"))
+                        .contact(new Contact()
+                                .name("Daniel Contreras")
+                                .url("https://dacm-dev.netlify.app/"))
                         .termsOfService("http://swagger.io/terms/")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")))
                 .components(

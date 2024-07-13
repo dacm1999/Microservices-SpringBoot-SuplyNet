@@ -158,7 +158,7 @@ public class UserServiceSecurityConfig {
     }
 
 
-    @RestController
+//    @RestController
     @RequiredArgsConstructor
     public static class GreetingController {
         private final MessageService messageService;

@@ -1,9 +1,8 @@
-package com.dacm.dev.apigateway;
+package com.dacm.dev.apigateway.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

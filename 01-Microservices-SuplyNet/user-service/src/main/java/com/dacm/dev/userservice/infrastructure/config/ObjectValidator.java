@@ -1,6 +1,7 @@
 package com.dacm.dev.userservice.infrastructure.config;
 
 
+import com.dacm.dev.userservice.domain.exceptions.CustomException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,7 @@ public class ObjectValidator {
             return object;
         else {
             String message = errors.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
-            throw new Exception(message);
-//            throw new CustomException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, message, LocalDateTime.now());
+            throw new CustomException(HttpStatus.BAD_REQUEST.value(), message,HttpStatus.BAD_REQUEST , LocalDateTime.now());
         }
     }
 }
