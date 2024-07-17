@@ -57,13 +57,6 @@ public class UserServiceSecurityConfig {
                 .authorizeExchange(authorizeExchangeSpec ->
                         authorizeExchangeSpec
 
-//                                .pathMatchers(HttpMethod.GET,"/user-service/webjars/**").permitAll()
-//                                .pathMatchers(HttpMethod.GET,"/user-service/swagger-ui.html").permitAll()
-//                                .pathMatchers(HttpMethod.GET,"/user-service/swagger-resources/**").permitAll()
-//                                .pathMatchers(HttpMethod.GET,"/user-service/v3/api-docs/**").permitAll()
-//                                .pathMatchers(HttpMethod.GET,"/user-service/v3/api-docs/**").permitAll()
-
-
                                 //Registration endpoint
                                 .pathMatchers("registration").permitAll()
 

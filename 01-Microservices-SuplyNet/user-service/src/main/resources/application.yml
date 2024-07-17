@@ -3,6 +3,12 @@ server:
     context-path: /
   port: 8001
 
+logging:
+  level:
+    org:
+      springframework:
+        security=DEBUG:
+
 spring:
   application:
     name: user-service
@@ -15,25 +21,25 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8000
+          issuer-uri: http://authorization-service:8000
   r2dbc:
     password: root
     url: r2dbc:mariadb://localhost:3314/user-service-db?allowPublicKeyRetrieval=true
     username: root
-
 eureka:
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka/
-    register-with-eureka: 'true'
+      defaultZone: http://eureka-service:8761/eureka/
     instance:
-      prefer-ip-address: 'true'
-    fetch-registry: 'true'
+      prefer-ip-address: true
+    register-with-eureka: true
+    fetch-registry: true
 
   instance:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
+    namespace: user-service
 
 openapi:
   service:
@@ -47,13 +53,3 @@ springdoc:
   swagger-ui:
     path: /user-service/swagger-ui.html
 
-#springdoc:
-#  api-docs:
-#    enabled: true
-#  swagger-ui:
-#    enabled: true
-#    path: /user-service/swagger-ui.html
-#    config-url: /user-service/v3/api-docs/swagger-config
-#    urls:
-#      - url: /user-service/v3/api-docs
-#        name: USER SERVICE

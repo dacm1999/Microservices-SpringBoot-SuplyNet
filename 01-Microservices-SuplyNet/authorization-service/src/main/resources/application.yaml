@@ -2,30 +2,32 @@ server:
   port: 8000
 #  servlet:
 #    context-path: /authorization-service
+
 spring:
   application:
-    name: authorization-service
+    name: authorization-service  # Nombre de la aplicación Spring Boot
   datasource:
-    url: jdbc:mysql://localhost:3313/auth-service-db
-    username: root
-    password: root
+    url: jdbc:mysql://auth-service-db:3306/auth-service-db
+    username: admin
+    password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL8Dialect
+
 
 eureka:
-
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-service:8761/eureka/
     instance:
       prefer-ip-address: true
     register-with-eureka: true
     fetch-registry: true
-
   instance:
+    namespace: authorization-service
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30

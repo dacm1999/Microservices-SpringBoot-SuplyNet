@@ -19,6 +19,9 @@ services:
       - 3313
     volumes:
       - auth-data:/var/lib/mysql
+    networks:
+      - my-network
+
 
   ### MySQL database for User Service
   db-user:
@@ -36,81 +39,78 @@ services:
       - 3314
     volumes:
       - user-data:/var/lib/mysql
+    networks:
+      - my-network
 
-  ### Postgres database for Inventory
-  db-inventory:
-    container_name: inventory-service-db
-    image: postgres:15.2
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: inventory-service-db
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+  ### Eureka Service
+  eureka-service:
+    image: dacm/eureka-service:1.0.0-SNAPSHOT
+    build:
+      context: ./eureka-service
     ports:
-      - 5431:5431
-    expose:
-      - 5431
-    command: -p 5431
-    volumes:
-      - inventory-data:/var/lib/postgresql/data
-  ### MySQL database for Orders
+      - 8761:8761
+    networks:
+      - my-network
 
-  db-orders:
-    container_name: orders-service-db
-    image: mysql:latest
-    restart: unless-stopped
+  ### Authorization Service
+  authorization-service:
+    image: dacm/authorization-service:1.0.0-SNAPSHOT
+    build:
+      context: ./authorization-service
     environment:
-      MYSQL_DATABASE: orders-service-db
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_ROOT_PASSWORD: root
+      - SPRING_DATASOURCE_URL=jdbc:mysql://auth-service-db:3306/auth-service-db
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
     ports:
-      - 3310:3306
-    expose:
-      - 3310
-    volumes:
-      - orders-data:/var/lib/mysql
-  ### Postgres database for Products
+      - 8000:8000
+    depends_on:
+      - db-auth
+      - eureka-service
+    networks:
+      - my-network
 
-  db-products:
-    container_name: products-service-db
-    image: postgres:latest
-    restart: unless-stopped
+  ### User Service
+  user-service:
+    image: dacm/user-service:1.0.0-SNAPSHOT
+    build:
+      context: ./user-service
     environment:
-      POSTGRES_DB: products-service-db
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
+      - SPRING_DATASOURCE_URL=r2dbc:mariadb://db-user:3306/user-service-db?allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://authorization-service:8000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
     ports:
-      - 5433:5433
-    expose:
-      - 5433
-    command: -p 5433
-    volumes:
-      - products-data:/var/lib/postgresql/data
-  ### MySQL database for Stores
+      - 8001:8001
+    depends_on:
+      - db-user
+      - authorization-service
+      - eureka-service
+    networks:
+      - my-network
 
-  db-stores:
-    container_name: stores-service-db
-    image: mysql:latest
-    restart: unless-stopped
+  api-gateway-service:
+    image: dacm/api-gateway-service:1.0.0-SNAPSHOT
+    build:
+      context: ./api-gateway
+    ports:
+      - 8080:8080
     environment:
-      MYSQL_DATABASE: stores-service-db
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - 3311:3306
-    expose:
-      - 3311
-    volumes:
-      - stores-data:/var/lib/mysql
-
+      - SPRING_APPLICATION_NAME=api-gateway-client
+      - SERVER_PORT=8080
+      - SPRING_CLOUD_GATEWAY_HTTPCLIENT_CONNECT-TIMEOUT=20000
+      - SPRING_CLOUD_GATEWAY_HTTPCLIENT_RESPONSE-TIMEOUT=7s
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://authorization-service:8000
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
+    depends_on:
+      - eureka-service
+    networks:
+      - my-network
 
 volumes:
-  inventory-data:
-  orders-data:
-  products-data:
-  stores-data:
   user-data:
   auth-data:
 

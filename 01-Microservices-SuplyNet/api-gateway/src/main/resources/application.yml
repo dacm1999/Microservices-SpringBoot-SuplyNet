@@ -13,22 +13,20 @@ spring:
         response-timeout: 7s
       routes:
         - id: authorization-service
-          uri: http://localhost:8000
+          uri: lb://authorization-service
           predicates:
-            - Path=/oauth2/authorize, /oauth2/token, /userinfo, /.well-known/jwks.json , /authorization-service/v3/api-docs
+            - Path=/oauth2/authorize, /oauth2/token, /userinfo, /.well-known/jwks.json, /authorization-service/v3/api-docs
           filters:
             - StripPrefix=1
-            - TokenRelay=
-
+            - TokenRelay
 
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path= /users/** , /user-service/v3/api-docs
+            - Path=/users/**, /user-service/v3/api-docs
           filters:
-#            - TokenRelay=
             - StripPrefix=1
-#            - RewritePath=/user-service(?<segment>/?.*), /${segment}
+            - TokenRelay
 
 
 
@@ -45,7 +43,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "http://127.0.0.1:8000"
+          issuer-uri: http://authorization-service:8000
       client:
         registration:
           basic-client:
@@ -88,7 +86,7 @@ spring:
 eureka:
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-service:8761/eureka/
     instance:
       prefer-ip-address: true
     register-with-eureka: true
@@ -98,6 +96,7 @@ eureka:
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
+    namespace: api-gateway-client
 
 springdoc:
   enable-native-support: true
@@ -111,9 +110,9 @@ springdoc:
       - url: /v3/api-docs
         name: ApiGateway Service
         primaryName: API Gateway Service
-      - url: http://localhost:8001/user-service/v3/api-docs
+      - url: http://user-service:8001/user-service/v3/api-docs
         name: User service
         primaryName: User service
-      - url: http://localhost:8000/authorization-service/v3/api-docs
+      - url: http://authorization-service:8000/authorization-service/v3/api-docs
         name: Authorization service
         primaryName: Authorization service
