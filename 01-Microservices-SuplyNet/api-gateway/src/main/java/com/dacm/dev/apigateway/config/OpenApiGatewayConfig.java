@@ -1,9 +1,10 @@
 package com.dacm.dev.apigateway.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +13,20 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "ApiGateway Service", version = "1.0.0", description = "Documentation API Gateway v1.0"))
 public class OpenApiGatewayConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
+                .info(new Info()
+                        .title("User Service Api")
+                        .version("1.0.0")
+                        .description("API for user service application")
+                        .contact(new Contact()
+                                .name("Daniel Contreras")
+                                .url("https://dacm-dev.netlify.app/"))
+                        .termsOfService("http://swagger.io/terms/")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org")))
                 .components(new Components()
                         .addSecuritySchemes("spring_oauth", new SecurityScheme()
                                 .type(SecurityScheme.Type.OAUTH2)

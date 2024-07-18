@@ -1,7 +1,6 @@
 server:
   port: 8080
-#  servlet:
-#    context-path: /api-gateway
+
 spring:
   application:
     name: api-gateway-client
@@ -19,7 +18,6 @@ spring:
           filters:
             - StripPrefix=1
             - TokenRelay
-
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -28,17 +26,13 @@ spring:
             - StripPrefix=1
             - TokenRelay
 
-
-
       discovery:
         locator:
           enabled: true
           lowerCaseServiceId: true
-  #  main:
-  #    allow-bean-definition-overriding: true
-  #    web-application-type: reactive
 
   output.ansi.enabled: ALWAYS
+
   security:
     oauth2:
       resourceserver:
@@ -60,21 +54,10 @@ spring:
             client-id: swagger-ui-client
             client-secret: client-secret
             authorization-grant-type: authorization_code
-            redirect-uri: 'http://localhost:8080/webjars/swagger-ui/index.html'
+            redirect-uri: 'http://127.0.0.1:8080/webjars/swagger-ui/index.html'
             scope: openid, profile
             client-name: SWAGGER-UI CLIENT
             provider: gateway-provider
-
-          pkce-client:
-            client-id: pkce-client
-            client-secret: client-secret
-            authorization-grant-type: authorization_code
-            redirect-uri: 'http://127.0.0.1:8080/swagger-ui/'
-            scope: openid, ALL
-            client-name: PKCE CLIENT
-            provider: gateway-provider
-            client-authentication-method: basic
-        #            redirect-uri: 'http://127.0.0.1:8080/login/oauth2/code/jwk-client'
 
         provider:
           gateway-provider:
@@ -110,9 +93,9 @@ springdoc:
       - url: /v3/api-docs
         name: ApiGateway Service
         primaryName: API Gateway Service
-      - url: http://user-service:8001/user-service/v3/api-docs
+      - url: http://127.0.0.1:8001/user-service/v3/api-docs
         name: User service
         primaryName: User service
-      - url: http://authorization-service:8000/authorization-service/v3/api-docs
+      - url: http://127.0.0.1:8000/authorization-service/v3/api-docs
         name: Authorization service
         primaryName: Authorization service

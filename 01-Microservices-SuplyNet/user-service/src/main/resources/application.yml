@@ -41,12 +41,6 @@ eureka:
     lease-expiration-duration-in-seconds: 30
     namespace: user-service
 
-openapi:
-  service:
-    title: user-service doc
-    version: 1.0.0
-    url: http://localhost:8080
-
 springdoc:
   api-docs:
     path: /user-service/v3/api-docs

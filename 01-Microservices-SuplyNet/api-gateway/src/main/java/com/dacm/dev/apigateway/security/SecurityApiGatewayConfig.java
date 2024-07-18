@@ -18,15 +18,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebFluxSecurity
 public class SecurityApiGatewayConfig {
 
-//    @Bean
-//    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
-//        return builder
-//                .routes()
-//                .route(r -> r.path("/user-service/v3/api-docs").and().method(HttpMethod.GET).uri("lb://user-service"))
-//                .build();
-//    }
-
-
     @Bean
     @Order(1)
     public SecurityWebFilterChain basicClientFilterChain(ServerHttpSecurity http) {

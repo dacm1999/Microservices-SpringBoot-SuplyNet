@@ -77,12 +77,12 @@ services:
     image: dacm/user-service:1.0.0-SNAPSHOT
     build:
       context: ./user-service
-    environment:
-      - SPRING_DATASOURCE_URL=r2dbc:mariadb://db-user:3306/user-service-db?allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://authorization-service:8000
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
+#    environment:
+#      - SPRING_DATASOURCE_URL=r2dbc:mariadb://db-user:3306/user-service-db?allowPublicKeyRetrieval=true
+#      - SPRING_DATASOURCE_USERNAME=root
+#      - SPRING_DATASOURCE_PASSWORD=root
+#      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://authorization-service:8000
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
     ports:
       - 8001:8001
     depends_on:
@@ -98,13 +98,6 @@ services:
       context: ./api-gateway
     ports:
       - 8080:8080
-    environment:
-      - SPRING_APPLICATION_NAME=api-gateway-client
-      - SERVER_PORT=8080
-      - SPRING_CLOUD_GATEWAY_HTTPCLIENT_CONNECT-TIMEOUT=20000
-      - SPRING_CLOUD_GATEWAY_HTTPCLIENT_RESPONSE-TIMEOUT=7s
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://authorization-service:8000
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-service:8761/eureka/
     depends_on:
       - eureka-service
     networks:
