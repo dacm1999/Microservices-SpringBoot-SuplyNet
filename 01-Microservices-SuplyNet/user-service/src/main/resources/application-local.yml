@@ -1,0 +1,66 @@
+application:
+  message: User service local profile is running
+
+server:
+  servlet:
+    context-path: /
+  port: 8001
+
+
+logging:
+  level:
+    org:
+      springframework:
+        security=DEBUG:
+
+spring:
+  application:
+    name: user-service
+  main:
+    allow-bean-definition-overriding: 'true'
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://authorization-service:8000
+  r2dbc:
+    password: root
+    url: r2dbc:mariadb://localhost:3314/user-service-db?allowPublicKeyRetrieval=true
+    username: root
+  config:
+    activate:
+      on-profile: local
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      prefer-ip-address: true
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+    namespace: user-service
+
+springdoc:
+  api-docs:
+    path: /user-service/v3/api-docs
+  swagger-ui:
+    path: /user-service/swagger-ui.html
+
+management:
+  endpoint:
+    env:
+      post:
+        enabled: true
+  health:
+    refresh:
+      enabled: true
+
+

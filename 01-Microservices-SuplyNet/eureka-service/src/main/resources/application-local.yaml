@@ -1,0 +1,54 @@
+application:
+  message= Eureka Service local profile is running
+
+server:
+  port: 8761
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname:localhost}:8761/eureka/
+    register-with-eureka: false
+    fetch-registry: false
+
+  server:
+    enable-self-preservation: true
+    wait-time-in-ms-when-sync-empty: 0
+    eviction-interval-timer-in-ms: 5000
+    renewal-threshold-update-interval-ms: 60000
+    renewal-percent-threshold: 0.85
+
+
+  instance:
+    hostname: ${customer_app_hostname:localhost}
+    instance-id: ${spring.application.name}:${random.uuid}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+
+
+
+# Used for test, it logs queries
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus, info
+
+        logging:
+          level:
+            org:
+              springframework:
+                orm:
+                  jpa: DEBUG
+                transaction: DEBUG
+              hibernate:
+                SQL: DEBUG
+                type:
+                  descriptor:
+                    sql:
+                      BasicBinder: TRACE
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: Eureka-Naming-Server

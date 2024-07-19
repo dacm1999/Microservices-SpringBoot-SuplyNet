@@ -1,0 +1,115 @@
+application:
+  message: ApiGateway local profile is running
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway-client
+
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 20000
+        response-timeout: 7s
+      routes:
+        - id: authorization-service
+          uri: lb://authorization-service
+          predicates:
+            - Path=/oauth2/authorize, /oauth2/token, /userinfo, /.well-known/jwks.json
+            - Path=/authorization-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+            - TokenRelay
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**, /user-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+            - TokenRelay
+
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+
+  output.ansi.enabled: ALWAYS
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://authorization-service:8000
+      client:
+        registration:
+          basic-client:
+            client-id: basic-client
+            client-secret: client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: 'http://127.0.0.1:8080/authorized'
+            scope: openid , all
+            client-name: BASIC CLIENT
+            provider: gateway-provider
+            client-authentication-method: basic
+
+          swagger-ui-client:
+            client-id: swagger-ui-client
+            client-secret: client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: 'http://127.0.0.1:8080/webjars/swagger-ui/index.html'
+            scope: openid, profile
+            client-name: SWAGGER-UI CLIENT
+            provider: gateway-provider
+
+        provider:
+          gateway-provider:
+            authorization-uri: 'http://127.0.0.1:8000/oauth2/authorize'
+            token-uri: 'http://127.0.0.1:8000/oauth2/token'
+            user-info-uri: 'http://127.0.0.1:8000/userinfo'
+            jwk-set-uri: 'http://127.0.0.1:8000/.well-known/jwks.json'
+  config:
+    activate:
+      on-profile: local
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      prefer-ip-address: true
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+    namespace: api-gateway-client
+
+springdoc:
+  enable-native-support: true
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: ApiGateway Service
+      - url: http://127.0.0.1:8001/user-service/v3/api-docs
+        name: User service
+      - url: http://127.0.0.1:8000/authorization-service/v3/api-docs
+        name: Authorization service
+
+
+management:
+  endpoint:
+    env:
+      post:
+        enabled: true
+  health:
+    refresh:
+      enabled: true

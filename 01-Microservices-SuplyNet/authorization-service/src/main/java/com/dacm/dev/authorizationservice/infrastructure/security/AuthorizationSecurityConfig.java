@@ -13,6 +13,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
@@ -22,7 +24,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -40,6 +43,7 @@ public class AuthorizationSecurityConfig {
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
 
+        http.cors(Customizer.withDefaults());
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
@@ -49,8 +53,9 @@ public class AuthorizationSecurityConfig {
             exceptionConfig.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
         });
 
-        http.oauth2ResourceServer(resourceServer -> {resourceServer
-                .jwt(Customizer.withDefaults());
+        http.oauth2ResourceServer(resourceServer -> {
+            resourceServer
+                    .jwt(Customizer.withDefaults());
         });
 
         return http.build();
@@ -60,27 +65,17 @@ public class AuthorizationSecurityConfig {
     @Order(2)
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
 
+        http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(authConfig -> {
             authConfig.requestMatchers("/login").permitAll();
             authConfig.requestMatchers("authorized").permitAll();
             authConfig.anyRequest().authenticated();
         });
-        http.formLogin(formLoginConfig -> formLoginConfig.loginPage("/login").permitAll() );
+        http.formLogin(formLoginConfig -> formLoginConfig.loginPage("/login").permitAll());
 
         return http.build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.addAllowedOrigin("http://127.0.0.1:8000"); // Permitir acceso desde el servidor de autorización
-        config.setAllowCredentials(true);
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {

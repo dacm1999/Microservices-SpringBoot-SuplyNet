@@ -1,0 +1,54 @@
+application:
+  message: Authorization Service local profile is running
+
+server:
+  servlet:
+    context-path: /
+  port: 8000
+spring:
+  application:
+    name: authorization-service
+  main:
+    allow-bean-definition-overriding: 'true'
+  datasource:
+    url: jdbc:mysql://localhost:3313/auth-service-db
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  config:
+    activate:
+      on-profile: local
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    instance:
+      prefer-ip-address: true
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+    namespace: authorization-service
+
+springdoc:
+  api-docs:
+    path: /authorization-service/v3/api-docs
+  swagger-ui:
+    path: /authorization-service/swagger-ui.html
+
+management:
+  endpoint:
+    env:
+      post:
+        enabled: true
+  health:
+    refresh:
+      enabled: true

@@ -1,22 +1,19 @@
-package com.dacm.dev.apigateway.config;
+package com.dacm.dev.authorizationservice.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-import org.springframework.web.reactive.config.CorsRegistry;
-import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
-public class CorsGlobalConfiguration {
+public class CorsAuthenticationServiceConfiguration {
 
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("http://127.0.0.1:8080");
-        corsConfiguration.addAllowedOrigin("http://authorization-service:8000");
-        corsConfiguration.addAllowedOrigin("http://user-service:8001");
+        corsConfiguration.addAllowedOrigin("http://127.0.0.1:8000");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);
@@ -26,5 +23,4 @@ public class CorsGlobalConfiguration {
 
         return new CorsWebFilter(source);
     }
-
 }

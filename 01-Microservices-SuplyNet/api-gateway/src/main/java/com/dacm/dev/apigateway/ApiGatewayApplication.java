@@ -26,12 +26,28 @@ public class ApiGatewayApplication {
     }
 
 
+//    @Bean
+//    public RouteLocator routeLocator(RouteLocatorBuilder builder) {
+//        return builder
+//                .routes()
+//                .route(r -> r.path("/user-service/v3/api-docs").and()
+//                        .method(HttpMethod.GET).uri("lb://user-service"))
+//                .build();
+//    }
+
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder
                 .routes()
-                .route(r -> r.path("/user-service/v3/api-docs").and().method(HttpMethod.GET).uri("lb://user-service"))
+                .route("authorization-service", r -> r.path("/oauth2/authorize", "/oauth2/token", "/userinfo", "/.well-known/jwks.json", "/authorization-service/v3/api-docs")
+                        .uri("lb://authorization-service"))
+                .route("user-service", r -> r.path("/user-service/v3/api-docs")
+                        .and()
+                        .method(HttpMethod.GET)
+                        .uri("lb://user-service"))
                 .build();
     }
+
+
 
 }
