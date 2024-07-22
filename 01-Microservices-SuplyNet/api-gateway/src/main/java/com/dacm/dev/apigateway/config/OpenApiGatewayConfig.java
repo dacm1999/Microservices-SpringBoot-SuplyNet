@@ -19,9 +19,9 @@ public class OpenApiGatewayConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("User Service Api")
+                        .title("ApiGateway api")
                         .version("1.0.0")
-                        .description("API for user service application")
+                        .description("API for api gateway application")
                         .contact(new Contact()
                                 .name("Daniel Contreras")
                                 .url("https://dacm-dev.netlify.app/"))

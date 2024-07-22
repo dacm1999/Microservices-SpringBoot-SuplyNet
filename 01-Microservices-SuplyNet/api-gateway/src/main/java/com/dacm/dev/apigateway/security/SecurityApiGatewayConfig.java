@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -25,6 +26,7 @@ public class SecurityApiGatewayConfig {
                 authorizeExchange(authorizeExchange ->
                         authorizeExchange
 
+                                .pathMatchers(HttpMethod.GET,"/sign-up").permitAll()
                                 .pathMatchers(HttpMethod.GET,"/webjars/**").permitAll()
                                 .pathMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
                                 .pathMatchers(HttpMethod.GET,"/swagger-resources/**").permitAll()
@@ -36,7 +38,6 @@ public class SecurityApiGatewayConfig {
                                 .anyExchange().authenticated())
                 .oauth2Login(withDefaults())
                 .oauth2Client(withDefaults());
-//                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
         http.csrf(ServerHttpSecurity.CsrfSpec::disable);
         return http.build();
     }
@@ -53,6 +54,7 @@ public class SecurityApiGatewayConfig {
                 .oauth2Client(withDefaults());
         return http.build();
     }
+
 
 
     @Bean

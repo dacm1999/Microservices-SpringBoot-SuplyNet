@@ -25,7 +25,7 @@ spring:
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/users/**, /user-service/v3/api-docs
+            - Path=/user-service/**
           filters:
             - StripPrefix=1
             - TokenRelay
@@ -101,8 +101,6 @@ springdoc:
         name: ApiGateway Service
       - url: http://127.0.0.1:8001/user-service/v3/api-docs
         name: User service
-      - url: http://127.0.0.1:8000/authorization-service/v3/api-docs
-        name: Authorization service
 
 
 management:

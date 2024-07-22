@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +33,7 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
+
 
 
 @Slf4j
@@ -67,6 +69,9 @@ public class AuthorizationSecurityConfig {
 
         http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(authConfig -> {
+
+            authConfig.requestMatchers("/oauth2/authorize").permitAll(); // Asegúrate de que esta ruta esté permitida
+            authConfig.requestMatchers("/oauth2/token").permitAll(); // Permitir la ruta de token sin autenticación
             authConfig.requestMatchers("/login").permitAll();
             authConfig.requestMatchers("authorized").permitAll();
             authConfig.anyRequest().authenticated();
