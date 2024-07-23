@@ -25,7 +25,22 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://authorization-service:8000
+          issuer-uri: http://127.0.0.1:8000
+      client:
+        registration:
+          user-service-client:
+            client-id: user-service-client
+            client-secret: client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: 'http://127.0.0.1:8080/sign-up'
+            scope: openid, profile
+            provider: gateway-provider
+        provider:
+          gateway-provider:
+            authorization-uri: 'http://127.0.0.1:8000/oauth2/authorize'
+            token-uri: 'http://127.0.0.1:8000/oauth2/token'
+            user-info-uri: 'http://127.0.0.1:8000/userinfo'
+            jwk-set-uri: 'http://127.0.0.1:8000/.well-known/jwks.json'
   r2dbc:
     password: root
     url: r2dbc:mariadb://localhost:3314/user-service-db?allowPublicKeyRetrieval=true
@@ -62,5 +77,3 @@ management:
   health:
     refresh:
       enabled: true
-
-

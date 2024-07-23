@@ -1,4 +1,4 @@
-package com.dacm.dev.userservice.infrastructure.adapters.input.Handler;
+package com.dacm.dev.userservice.infrastructure.adapters.input.handler;
 
 
 import com.dacm.dev.userservice.application.service.UserService;
@@ -8,23 +8,12 @@ import com.dacm.dev.userservice.domain.dtos.response.UserDto;
 import com.dacm.dev.userservice.domain.model.UserModel;
 import com.dacm.dev.userservice.infrastructure.adapters.output.persistence.entity.User;
 import com.dacm.dev.userservice.infrastructure.config.ObjectValidator;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;

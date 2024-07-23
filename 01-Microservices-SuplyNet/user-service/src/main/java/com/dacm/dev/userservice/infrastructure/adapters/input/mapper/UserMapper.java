@@ -19,7 +19,8 @@ public class UserMapper {
                 user.getUsername(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getEmail());
+                user.getEmail(),
+                user.getPassword());
     }
 
     /**
@@ -34,7 +35,9 @@ public class UserMapper {
                 user.getUsername(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getEmail());
+                user.getEmail(),
+                user.getPassword()
+        );
     }
 
     /**

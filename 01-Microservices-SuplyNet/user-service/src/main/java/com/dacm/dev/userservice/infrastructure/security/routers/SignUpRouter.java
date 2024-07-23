@@ -1,15 +1,10 @@
 package com.dacm.dev.userservice.infrastructure.security.routers;
 
 import com.dacm.dev.userservice.domain.Message;
-import com.dacm.dev.userservice.domain.dtos.response.ApiResponseDto;
 import com.dacm.dev.userservice.domain.dtos.response.UserDto;
 import com.dacm.dev.userservice.domain.exceptions.CustomAttributes;
-import com.dacm.dev.userservice.domain.exceptions.CustomException;
-import com.dacm.dev.userservice.infrastructure.adapters.input.Handler.SingUpHandler;
-import com.dacm.dev.userservice.infrastructure.adapters.input.Handler.UserHandler;
+import com.dacm.dev.userservice.infrastructure.adapters.input.handler.SingUpHandler;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -1,5 +1,6 @@
 package com.dacm.dev.userservice.domain.dtos.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,7 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
+    @JsonIgnore
+    private String password;
 
 }

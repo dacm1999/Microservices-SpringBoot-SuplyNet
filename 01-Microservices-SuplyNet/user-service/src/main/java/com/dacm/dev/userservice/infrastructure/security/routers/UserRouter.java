@@ -5,7 +5,7 @@ import com.dacm.dev.userservice.domain.dtos.response.ApiResponseDto;
 import com.dacm.dev.userservice.domain.dtos.response.UserDto;
 import com.dacm.dev.userservice.domain.exceptions.CustomAttributes;
 import com.dacm.dev.userservice.domain.exceptions.CustomException;
-import com.dacm.dev.userservice.infrastructure.adapters.input.Handler.UserHandler;
+import com.dacm.dev.userservice.infrastructure.adapters.input.handler.UserHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

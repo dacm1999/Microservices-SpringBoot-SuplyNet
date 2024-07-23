@@ -116,7 +116,7 @@ public class AuthorizationSecurityConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer("http://authorization-service:8000")
+                .issuer("http://127.0.0.1:8000")
                 .authorizationEndpoint("/oauth2/authorize")
                 .tokenEndpoint("/oauth2/token")
                 .oidcUserInfoEndpoint("/userinfo")

@@ -1,4 +1,4 @@
-package com.dacm.dev.userservice.infrastructure.adapters.input.Handler;
+package com.dacm.dev.userservice.infrastructure.adapters.input.handler;
 
 import com.dacm.dev.userservice.application.service.UserService;
 import com.dacm.dev.userservice.domain.model.UserModel;
