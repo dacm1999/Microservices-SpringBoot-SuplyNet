@@ -87,6 +87,10 @@ eureka:
     lease-renewal-interval-in-seconds: 10
     lease-expiration-duration-in-seconds: 30
     namespace: api-gateway-client
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#logging:
+#  pattern:
+#    level: "%5p [${spring.application.name}, %X{traceId:-}, %X{spanId:-}]"
 
 springdoc:
   enable-native-support: true
@@ -101,7 +105,6 @@ springdoc:
         name: ApiGateway Service
       - url: http://127.0.0.1:8001/user-service/v3/api-docs
         name: User service
-
 
 management:
   endpoint:

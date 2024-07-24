@@ -1,8 +1,21 @@
 application:
   message= Eureka Service local profile is running
 
+#Spring application config
+spring:
+  security:
+    user:
+      name: eureka
+      password: password
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: Eureka-Naming-Server
 server:
   port: 8761
+
+#Eureka Service configuration
 eureka:
   client:
     service-url:
@@ -23,9 +36,6 @@ eureka:
     instance-id: ${spring.application.name}:${random.uuid}
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 10
-
-
-
 # Used for test, it logs queries
 management:
   endpoints:
@@ -46,9 +56,8 @@ management:
                   descriptor:
                     sql:
                       BasicBinder: TRACE
-spring:
-  config:
-    activate:
-      on-profile: local
-  application:
-    name: Eureka-Naming-Server
+
+# Used for test, it logs queries
+#logging:
+#  pattern:
+#    level: "%5p [${spring.application.name}, %X{traceId:-}, %X{spanId:-}]"
