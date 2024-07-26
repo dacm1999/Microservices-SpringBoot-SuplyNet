@@ -36,6 +36,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -50,21 +51,25 @@ public class UserServiceSecurityConfig {
 
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, UserReactiveAuthenticationManager authenticationManager) {
         return http
                 .cors(Customizer.withDefaults())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(authorizeExchangeSpec ->
                         authorizeExchangeSpec
 
+                                .pathMatchers("/actuator/info").authenticated()
+
                                 //Registration endpoint
                                 .pathMatchers("registration").permitAll()
 
+                                //Login endpoint
+                                .pathMatchers(HttpMethod.POST, "users/authenticate").permitAll()
                                 //Users endpoint
-                                .pathMatchers(HttpMethod.GET,"users/all").authenticated()
-                                .pathMatchers(HttpMethod.GET,"users/user-info/{username}").authenticated()
-                                .pathMatchers(HttpMethod.PUT,"users/update/{username}").permitAll()
-                                .pathMatchers(HttpMethod.DELETE,"users/{username}").authenticated()
+                                .pathMatchers(HttpMethod.GET, "users/all").authenticated()
+                                .pathMatchers(HttpMethod.GET, "users/user-info/{username}").authenticated()
+                                .pathMatchers(HttpMethod.PUT, "users/update/{username}").permitAll()
+                                .pathMatchers(HttpMethod.DELETE, "users/{username}").authenticated()
                                 .anyExchange()
                                 .access(authorizationContextReactiveAuthorizationManager()))
                 .exceptionHandling(exceptionHandlingSpec -> {
@@ -72,6 +77,10 @@ public class UserServiceSecurityConfig {
                             .authenticationEntryPoint(serverAuthenticationEntryPoint())
                             .accessDeniedHandler(serverAccessDeniedHandler());
                 })
+                .formLogin(formLoginConfig -> formLoginConfig.loginPage("/login"))
+                .authenticationManager(authenticationManager)
+//                .oauth2Login(withDefaults())
+//                .oauth2Client(withDefaults())
                 .oauth2ResourceServer(oAuth2ResourceServerSpec ->
                         oAuth2ResourceServerSpec.jwt(
                                 jwtSpec -> jwtSpec.jwtDecoder(jwtDecoder())
@@ -103,16 +112,6 @@ public class UserServiceSecurityConfig {
         };
     }
 
-//    @Bean
-//    public ServerAccessDeniedHandler serverAccessDeniedHandler() {
-//        return (exchange, denied) -> {
-//            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
-//            // Custom error response
-//            return exchange.getResponse().writeWith(
-//                    Mono.just(exchange.getResponse().bufferFactory().wrap("Access Denied".getBytes()))
-//            );
-//        };
-//    }
 
     @Bean
     public ServerAccessDeniedHandler serverAccessDeniedHandler() {
@@ -151,7 +150,7 @@ public class UserServiceSecurityConfig {
     }
 
 
-//    @RestController
+    //    @RestController
     @RequiredArgsConstructor
     public static class GreetingController {
         private final MessageService messageService;

@@ -2,16 +2,13 @@ package com.dacm.dev.userservice.infrastructure.adapters.output.persistence.enti
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 
 @Data
@@ -33,13 +30,20 @@ public class User implements UserDetails {
     private boolean credentialsExpired = false;
     private boolean disabled = false;
 
-
+//    public User(UserDetails user) {
+//
+//        this.setUsername(user.getUsername());
+//        this.setPassword(user.getPassword());
+//
+//    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        //        return null;
         //        return roles.stream()
-//                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
-//                .collect(Collectors.toSet());
+        //                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+        //                .collect(Collectors.toSet());
     }
 
     @Override
@@ -51,6 +55,7 @@ public class User implements UserDetails {
     public String getUsername() {
         return this.username;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return !expired;

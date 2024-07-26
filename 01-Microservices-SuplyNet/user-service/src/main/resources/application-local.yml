@@ -28,13 +28,15 @@ spring:
           issuer-uri: http://127.0.0.1:8000
       client:
         registration:
-          user-service-client:
-            client-id: user-service-client
+          basic-client:
+            client-id: basic-client
             client-secret: client-secret
             authorization-grant-type: authorization_code
-            redirect-uri: 'http://127.0.0.1:8080/sign-up'
-            scope: openid, profile
+            redirect-uri: 'http://127.0.0.1:8080/authorized'
+            scope: openid , all
+            client-name: USER-SERVICE
             provider: gateway-provider
+            client-authentication-method: basic
         provider:
           gateway-provider:
             authorization-uri: 'http://127.0.0.1:8000/oauth2/authorize'

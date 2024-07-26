@@ -12,9 +12,9 @@ import com.dacm.dev.userservice.infrastructure.adapters.output.persistence.repos
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserDto> save(UserModel userModel) {
+        log.info(userModel.getUsername() + " logged");
         return userRepository.findByUsername(userModel.getUsername())
                 .hasElement()
                 .flatMap(exists -> {
@@ -113,6 +114,13 @@ public class UserServiceImpl implements UserService {
                             )));
                 })
                 .switchIfEmpty(Mono.error(new CustomException(HttpStatus.BAD_REQUEST.value(), Message.USER_NOT_FOUND,HttpStatus.BAD_REQUEST,LocalDateTime.now())));
+    }
+
+    @Override
+    public Mono<User> authenticate(String username, String password) {
+        return userRepository.findByUsername(username)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+                .switchIfEmpty(Mono.error(new UsernameNotFoundException("Invalid username or password")));
     }
 
 

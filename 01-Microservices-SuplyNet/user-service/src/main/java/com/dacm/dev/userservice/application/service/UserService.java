@@ -4,12 +4,12 @@ package com.dacm.dev.userservice.application.service;
 import com.dacm.dev.userservice.domain.dtos.response.ApiResponseDto;
 import com.dacm.dev.userservice.domain.dtos.response.UserDto;
 import com.dacm.dev.userservice.domain.model.UserModel;
+import com.dacm.dev.userservice.infrastructure.adapters.output.persistence.entity.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
 public interface UserService {
-
 
     Mono<UserDto> save(UserModel userModel);
 
@@ -21,5 +21,5 @@ public interface UserService {
 
     Mono<ApiResponseDto> deleteUser(String username);
 
-
+    Mono<User> authenticate(String username, String password);
 }
