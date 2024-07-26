@@ -1,4 +1,4 @@
-package com.dacm.dev.userservice.infrastructure.security;
+package com.dacm.dev.userservice.infrastructure.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
